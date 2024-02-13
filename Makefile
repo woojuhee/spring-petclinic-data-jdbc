@@ -1,7 +1,7 @@
 .PYONY: help
 
 DOCKER_IMAGE_NAME ?= spring-petclinic-data-jdbc-maven
-DOCKER_PROJECT_NAME ?= docker.io/gitops
+DOCKER_PROJECT_NAME ?= docker.io/jheewoo
 DOCKER_IMAGE_VERSION ?= $(shell git describe)
 DOCKER_REPOSITORY ?= $(DOCKER_PROJECT_NAME)/$(DOCKER_IMAGE_NAME)
 GIT_BRANCH ?= master
