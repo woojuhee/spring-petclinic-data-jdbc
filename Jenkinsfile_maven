@@ -10,12 +10,11 @@ pipeline {
                 }
             }
         }
-    }
 
-    stages {
         stage('Login to Docker Hub') {
             steps {
                 script {
+                    // Login to Docker Hub using credentials
                     withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_TOKEN', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
@@ -31,11 +30,13 @@ pipeline {
                 }
             }
         }
+    }
 
     post {
         always {
-            // Clean up
+            // Clean up workspace
             cleanWs()
         }
     }
 }
+
