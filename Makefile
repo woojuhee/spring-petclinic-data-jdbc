@@ -1,6 +1,6 @@
 .PYONY: help
 
-DOCKER_IMAGE_NAME ?= spring-petclinic-data-jdbc-maven
+DOCKER_IMAGE_NAME ?= spring-petclinic-data-jdbc
 DOCKER_PROJECT_NAME ?= docker.io/jheewoo
 DOCKER_IMAGE_VERSION ?= $(shell git describe)
 DOCKER_REPOSITORY ?= $(DOCKER_PROJECT_NAME)/$(DOCKER_IMAGE_NAME)
@@ -19,10 +19,17 @@ check-git-clean: ## Check git
 
 build: ## Build image
 	@docker build -t $(DOCKER_REPOSITORY):latest .
-	@docker tag $(DOCKER_REPOSITORY):latest $(DOCKER_REPOSITORY):$(DOCKER_IMAGE_VERSION)
+	@docker tag $(DOCKER_REPOSITORY):latest $(DOCKER_REPOSITORY):$(DOCKER_IMAGE_VERSION)-maven
 
 push: ## check-git-clean build-image ## Push image
-	@docker push $(DOCKER_REPOSITORY):$(DOCKER_IMAGE_VERSION)
+	@docker push $(DOCKER_REPOSITORY):$(DOCKER_IMAGE_VERSION)-maven
+
+build-gradle: ## Build image
+	@docker build -t $(DOCKER_REPOSITORY):latest -f ./Dockerfile_gradle .
+	@docker tag $(DOCKER_REPOSITORY):latest $(DOCKER_REPOSITORY):$(DOCKER_IMAGE_VERSION)-gradle
+
+push-gradle: ## check-git-clean build-image ## Push image
+	@docker push $(DOCKER_REPOSITORY):$(DOCKER_IMAGE_VERSION)-gradle
 
 sonarqube:
 	@docker build \
