@@ -11,11 +11,18 @@ pipeline {
             }
         }
 
-        stage('Push') {
-            when {
-                // Only push if build succeeds
-                expression { currentBuild.result == 'SUCCESS' }
+    stages {
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_TOKEN', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                    }
+                }
             }
+        }
+
+        stage('Push') {
             steps {
                 script {
                     // Push image
@@ -23,7 +30,6 @@ pipeline {
                 }
             }
         }
-    }
 
     post {
         always {
