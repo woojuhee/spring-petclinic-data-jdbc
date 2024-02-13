@@ -5,21 +5,20 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Make build
-                    sh 'make build'
+                    // Git describe 명령어를 사용하여 태그 생성
+                    def gitTag = sh(script: 'git describe', returnStdout: true).trim()
+
+                    // Docker 이미지 빌드
+                    sh "docker build -t docker.io/gitops/spring-petclinic-data-jdbc-maven:${gitTag} ."
                 }
             }
         }
-
+        
         stage('Push') {
-            when {
-                // Only push if build succeeds
-                expression { currentBuild.result == 'SUCCESS' }
-            }
             steps {
                 script {
-                    // Push image
-                    sh 'make push'
+                    // Docker 이미지 푸시
+                    sh "docker push docker.io/gitops/spring-petclinic-data-jdbc-maven:${gitTag}"
                 }
             }
         }
@@ -27,7 +26,7 @@ pipeline {
 
     post {
         always {
-            // Clean up
+            // 작업 공간 정리
             cleanWs()
         }
     }
