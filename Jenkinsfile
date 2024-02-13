@@ -1,14 +1,19 @@
 pipeline {
-  agent {
-    docker {
-      image 'ghcr.io/felipecrs/jenkins-agent-dind:latest'
-      alwaysPull true
-      // --rm: ensures the container volumes are removed after the build
-      // --group-add=docker: is needed when using docker exec to run commands,
-      // which is what Jenkins does when running as a Jenkinsfile docker agent
-      args '--rm --privileged --group-add=docker'
-    }
-  }
+  agent any
+
+    stages {
+        stage('Prepare Environment') {
+            steps {
+                script {
+                    // Docker CLI 설치 및 설정
+                    sh 'apk add docker'
+                    sh 'docker --version' // Docker 설치 확인
+                    sh 'apk add curl' // 필요한 경우 curl을 설치할 수도 있습니다.
+                    sh 'curl -fsSL https://get.docker.com/rootless | sh' // 필요한 경우 rootless Docker 설치
+                    sh 'export DOCKER_HOST=unix:///var/run/docker.sock' // Docker 소켓 설정
+                }
+            }
+        }
 
     stages {
         stage('Build') {
