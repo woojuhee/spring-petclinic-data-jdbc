@@ -18,7 +18,7 @@ check-git-clean: ## Check git
 	fi
 
 build: ## Build image
-	@docker build -t $(DOCKER_REPOSITORY):latest .
+	@docker build -t $(DOCKER_REPOSITORY):latest -f ./Dockerfile_maven .
 	@docker tag $(DOCKER_REPOSITORY):latest $(DOCKER_REPOSITORY):$(DOCKER_IMAGE_VERSION)-maven
 
 push: ## check-git-clean build-image ## Push image
