@@ -13,6 +13,10 @@ spec:
     imagePullPolicy: Always
     command:
     - /busybox/cat
+    - apk update
+    - apk add make
+    - apk add git
+    - apk add curl
     tty: true
     volumeMounts:
       - name: docker-config
